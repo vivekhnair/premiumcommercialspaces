@@ -1,0 +1,89 @@
+# -----------------------------------------------
+# Premium Commercial Spaces — Apache/.htaccess
+# For GoDaddy cPanel Shared Hosting
+# -----------------------------------------------
+
+Options -Indexes
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Force non-www to www (optional — remove if you prefer bare domain)
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# Handle Next.js static export trailing slash routing
+# Serve /page/ -> /page/index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+# Serve index.html for directory requests
+DirectoryIndex index.html
+
+# If a path doesn't exist, fall back to index.html (SPA fallback)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# -----------------------------------------------
+# Performance & Caching Headers
+# -----------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # HTML — short cache (page updates)
+  ExpiresByType text/html                  "access plus 1 hour"
+
+  # CSS & JS — long cache (hashed filenames)
+  ExpiresByType text/css                   "access plus 1 year"
+  ExpiresByType application/javascript     "access plus 1 year"
+  ExpiresByType text/javascript            "access plus 1 year"
+
+  # Images
+  ExpiresByType image/jpeg                 "access plus 1 year"
+  ExpiresByType image/png                  "access plus 1 year"
+  ExpiresByType image/webp                 "access plus 1 year"
+  ExpiresByType image/gif                  "access plus 1 year"
+  ExpiresByType image/svg+xml              "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/woff                  "access plus 1 year"
+  ExpiresByType font/woff2                 "access plus 1 year"
+  ExpiresByType application/font-woff      "access plus 1 year"
+  ExpiresByType application/font-woff2     "access plus 1 year"
+</IfModule>
+
+# -----------------------------------------------
+# Compression (Gzip)
+# -----------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff2
+</IfModule>
+
+# -----------------------------------------------
+# Security Headers
+# -----------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# -----------------------------------------------
+# Custom Error Pages
+# -----------------------------------------------
+ErrorDocument 404 /index.html

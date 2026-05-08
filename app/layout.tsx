@@ -14,7 +14,7 @@ const inter = Inter({
   display: 'swap',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://premiumcommercialspaces.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://commercialpropertiesahmedabad.in'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -88,7 +88,7 @@ const jsonLd = {
   description:
     'Premium commercial real estate agency specializing in office spaces, retail shops, and showrooms across India.',
   telephone: '+91-98765-43210',
-  email: 'info@premiumcommercialspaces.com',
+  email: 'info@commercialpropertiesahmedabad.in',
   address: {
     '@type': 'PostalAddress',
     addressCountry: 'IN',
